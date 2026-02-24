@@ -1,65 +1,79 @@
-import Image from "next/image";
+// frontend/app/page.tsx
 
-export default function Home() {
+// 1. Fungsi mengambil data Event (Sudah ada)
+async function getEvents() {
+  const res = await fetch('http://127.0.0.1:8000/api/kegiatan/events/', { cache: 'no-store' });
+  if (!res.ok) throw new Error('Gagal mengambil data event');
+  return res.json();
+}
+
+// 2. TAMBAHAN: Fungsi mengambil data Galeri
+async function getGaleri() {
+  const res = await fetch('http://127.0.0.1:8000/api/kegiatan/galeri/', { cache: 'no-store' });
+  if (!res.ok) throw new Error('Gagal mengambil data galeri');
+  return res.json();
+}
+
+export default async function Home() {
+  // Panggil kedua datanya di sini
+  const events = await getEvents();
+  const galeri = await getGaleri(); // <--- Data galeri dipanggil
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+    <main className="p-8 font-sans">
+      
+      {/* ================= BAGIAN AGENDA ================= */}
+      <h1 className="text-3xl font-bold mb-6 text-green-800">
+        Agenda Perpustakaan Ganesa
+      </h1>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {events.map((event: any) => (
+          <div key={event.id} className="border rounded-lg p-4 shadow hover:shadow-lg transition-shadow bg-white">
+            {event.poster && (
+              <img 
+                src={event.poster.startsWith('http') ? event.poster : `http://127.0.0.1:8000${event.poster}`} 
+                alt={event.judul} 
+                className="w-full h-48 object-cover rounded-md mb-4" 
+              />
+            )}
+            <h2 className="text-xl font-bold text-gray-800">{event.judul}</h2>
+            <p className="text-sm font-semibold text-orange-600 mb-2">
+              {new Date(event.tanggal).toLocaleDateString('id-ID', {
+                weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+              })}
+            </p>
+            <p className="text-gray-600 text-sm line-clamp-3">{event.deskripsi}</p>
+          </div>
+        ))}
+      </div>
+
+      {/* ================= BAGIAN GALERI ================= */}
+      <h2 className="text-2xl font-bold mt-12 mb-6 text-green-800 border-t pt-8">
+        Galeri Kegiatan
+      </h2>
+
+      {/* Grid untuk galeri biasanya lebih kecil-kecil (banyak kolom) */}
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        {galeri.map((item: any) => (
+          <div key={item.id} className="border rounded-lg overflow-hidden shadow hover:shadow-md transition-shadow">
+            {item.foto && (
+              <img 
+                // Sama seperti event, kita tambahkan penanganan link gambar
+                src={item.foto.startsWith('http') ? item.foto : `http://127.0.0.1:8000${item.foto}`} 
+                alt={item.caption || 'Foto Dokumentasi'} 
+                className="w-full h-40 object-cover" 
+              />
+            )}
+            {item.caption && (
+              <p className="p-2 text-sm text-center text-gray-700 bg-gray-50 font-medium">
+                {item.caption}
+              </p>
+            )}
+          </div>
+        ))}
+      </div>
+
+    </main>
   );
 }
