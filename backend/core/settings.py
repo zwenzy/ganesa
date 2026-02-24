@@ -37,11 +37,24 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # --- Tambahan Library ---
+    'rest_framework',
+    'corsheaders',
+
+    # --- App buatan kita ---
+    'profil',
+    'kegiatan',
+    
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+
+    # --- Tambahkan baris ini ---
+    'corsheaders.middleware.CorsMiddleware',
+
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -115,3 +128,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
+# --- CORS SETTINGS ---
+# Mengizinkan frontend mengambil data dari backend
+CORS_ALLOW_ALL_ORIGINS = True 
+
+# --- MEDIA SETTINGS (Untuk foto/poster) ---
+import os
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
