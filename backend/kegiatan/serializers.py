@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Event, Galeri
+from .models import Event, Galeri, RekomendasiBuku
 
 class EventSerializer(serializers.ModelSerializer):
     class Meta:
@@ -9,4 +9,9 @@ class EventSerializer(serializers.ModelSerializer):
 class GaleriSerializer(serializers.ModelSerializer):
     class Meta:
         model = Galeri
+        fields = '__all__'
+
+class RekomendasiBukuSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RekomendasiBuku
         fields = '__all__'
