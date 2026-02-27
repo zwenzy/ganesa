@@ -1,5 +1,6 @@
 // frontend/app/page.tsx
 import Hero from './components/Hero';
+import AgendaSection from './components/AgendaSection';
 
 async function getEvents() {
   const res = await fetch('http://127.0.0.1:8000/api/kegiatan/events/', { cache: 'no-store' });
@@ -28,39 +29,8 @@ export default async function Home() {
       {/* 1. Bagian Hero */}
       <Hero />
 
-      {/* 2. Bagian Agenda Kegiatan */}
-      <section id="kegiatan" className="max-w-7xl mx-auto px-4 w-full">
-        <div className="flex justify-between items-end mb-8 border-l-4 border-orange-600 pl-4">
-          <div>
-            <h2 className="text-3xl font-bold text-green-900 italic">Agenda Mendatang</h2>
-            <p className="text-gray-500">Ikuti keseruan kegiatan di Perpustakaan Ganesa</p>
-          </div>
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {events.length > 0 ? events.map((event: any) => (
-            <div key={event.id} className="group bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300">
-              <div className="relative h-56 overflow-hidden">
-                <img 
-                  src={event.poster?.startsWith('http') ? event.poster : `http://127.0.0.1:8000${event.poster}`} 
-                  alt={event.judul}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                />
-                <div className="absolute top-4 left-4 bg-white/90 backdrop-blur px-3 py-1 rounded-md text-xs font-bold text-green-800 shadow-sm">
-                  {new Date(event.tanggal).toLocaleDateString('id-ID', { month: 'short', day: 'numeric' })}
-                </div>
-              </div>
-              <div className="p-6">
-                <h3 className="text-xl font-bold text-gray-800 mb-2 group-hover:text-green-700 transition-colors">{event.judul}</h3>
-                <p className="text-gray-600 text-sm line-clamp-2 mb-4">{event.deskripsi}</p>
-                <button className="text-green-800 font-bold text-sm flex items-center gap-2 hover:gap-3 transition-all">
-                  Lihat Detail <span>→</span>
-                </button>
-              </div>
-            </div>
-          )) : <p className="text-gray-500 italic">Belum ada agenda terdekat.</p>}
-        </div>
-      </section>
+      <AgendaSection initialEvents={events} />
+
 
       {/* ================= BAGIAN REKOMENDASI BUKU ================= */}
       <section className="max-w-7xl mx-auto px-4 w-full mt-12 mb-12">
