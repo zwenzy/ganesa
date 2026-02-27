@@ -15,4 +15,4 @@ class GaleriViewSet(viewsets.ReadOnlyModelViewSet):
 class RekomendasiBukuViewSet(viewsets.ModelViewSet):
     serializer_class = RekomendasiBukuSerializer
     # Mengambil 10 data terbaru
-    queryset = RekomendasiBuku.objects.all().order_by('-tanggal_ditambahkan')[:10]
+    queryset = RekomendasiBuku.objects.all().order_by('-tanggal_ditambahkan')

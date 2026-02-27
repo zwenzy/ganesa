@@ -1,6 +1,7 @@
 // frontend/app/page.tsx
 import Hero from './components/Hero';
 import AgendaSection from './components/AgendaSection';
+import Link from 'next/link';
 
 async function getEvents() {
   const res = await fetch('http://127.0.0.1:8000/api/kegiatan/events/', { cache: 'no-store' });
@@ -60,9 +61,12 @@ export default async function Home() {
                 <h3 className="font-bold text-gray-800 text-lg line-clamp-1">{buku.judul}</h3>
                 <p className="text-sm text-green-700 font-medium mb-2">{buku.penulis}</p>
                 <p className="text-xs text-gray-600 line-clamp-3 mb-4">{buku.ulasan}</p>
-                <button className="w-full bg-green-50 text-green-800 text-sm font-bold py-2 rounded hover:bg-green-800 hover:text-white transition-colors">
+                <Link 
+                  href={`/buku/${buku.id}`}
+                  className="block text-center w-full bg-green-50 text-green-800 text-sm font-bold py-2 rounded hover:bg-green-800 hover:text-white transition-colors"
+                >
                   Detail Buku
-                </button>
+                </Link>
               </div>
             </div>
           )) : (
