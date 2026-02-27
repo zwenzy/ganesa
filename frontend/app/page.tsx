@@ -24,15 +24,16 @@ export default async function Home() {
   const events = await getEvents();
   const galeri = await getGaleri();
   const rekomendasi = await getRekomendasi();
+
   return (
     <div className="flex flex-col gap-16 pb-20">
-      {/* 1. Bagian Hero */}
+      {/* 1. Hero Melayang yang Baru */}
       <Hero />
 
+      {/* 2. Agenda Modern (Bento Grid) */}
       <AgendaSection initialEvents={events} />
 
-
-      {/* ================= BAGIAN REKOMENDASI BUKU ================= */}
+      {/* 3. Pilihan Pustakawan (Rekomendasi Buku) */}
       <section className="max-w-7xl mx-auto px-4 w-full mt-12 mb-12">
         <div className="flex justify-between items-end mb-8 border-l-4 border-orange-600 pl-4">
           <div>
@@ -41,24 +42,22 @@ export default async function Home() {
           </div>
         </div>
 
-        {/* Gunakan overflow-x-auto agar bisa di-scroll ke samping (Carousel sederhana) */}
         <div className="flex overflow-x-auto gap-6 pb-4 snap-x">
           {rekomendasi.length > 0 ? rekomendasi.map((buku: any) => (
             <div key={buku.id} className="min-w-[250px] max-w-[250px] bg-white rounded-xl shadow-md border border-gray-100 flex-shrink-0 snap-start overflow-hidden hover:shadow-xl transition-all">
-              {/* Logika Gambar: Cek apakah pakai cover lokal atau URL dari LibraryThing */}
               <div className="h-60 bg-gray-100 relative">
                 <img 
                   src={
                     buku.cover_lokal 
                       ? (buku.cover_lokal.startsWith('http') ? buku.cover_lokal : `http://127.0.0.1:8000${buku.cover_lokal}`) 
-                      : (buku.cover_url || '/placeholder-book.png') // Fallback jika tidak ada gambar
+                      : (buku.cover_url || '/placeholder-book.png')
                   } 
                   alt={buku.judul}
                   className="w-full h-full object-cover"
                 />
               </div>
               <div className="p-4">
-                <h3 className="font-bold text-gray-800 text-lg line-clamp-1" title={buku.judul}>{buku.judul}</h3>
+                <h3 className="font-bold text-gray-800 text-lg line-clamp-1">{buku.judul}</h3>
                 <p className="text-sm text-green-700 font-medium mb-2">{buku.penulis}</p>
                 <p className="text-xs text-gray-600 line-clamp-3 mb-4">{buku.ulasan}</p>
                 <button className="w-full bg-green-50 text-green-800 text-sm font-bold py-2 rounded hover:bg-green-800 hover:text-white transition-colors">
@@ -72,7 +71,7 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* 3. Bagian Galeri */}
+      {/* 4. Galeri */}
       <section className="max-w-7xl mx-auto px-4 w-full">
         <div className="flex justify-between items-end mb-8 border-l-4 border-green-800 pl-4 text-right flex-row-reverse">
           <div>
@@ -80,7 +79,6 @@ export default async function Home() {
             <p className="text-gray-500 text-right">Dokumentasi kegiatan yang telah terlaksana</p>
           </div>
         </div>
-
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {galeri.map((item: any) => (
             <div key={item.id} className="relative group aspect-square rounded-xl overflow-hidden bg-gray-200">
